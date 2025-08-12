@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-dotenv.config();
+import { User } from '../models/users.models.js';
+import { Rol } from '../models/rules.models.js';
 
 export const authRequired = (req, res, next) => {
     // 1. Leemos el token de la cookie
@@ -23,12 +23,43 @@ export const authRequired = (req, res, next) => {
 };
 
 
-// modificar esto para usar roles
+
 export const authorizeRoles = (...allowedRoles) => {
-    return (req, res, next) => {
-        if (!req.user || !allowedRoles.includes(req.user.role)) {
-            return res.status(403).json({ message: 'Forbidden: You do not have permission to perform this action' });
+    return async (req, res, next) => {
+        // 1. Asegurarnos de que el middleware authRequired se ejecutó y tenemos un usuario con ID
+        if (!req.user || !req.user.id) {
+            return res.status(403).json({ message: 'Forbidden: User information is missing.' });
         }
-        next();
+
+        try {
+            // 2. Buscar al usuario en la BD y sus roles asociados
+            const user = await User.findByPk(req.user.id, {
+                include: {
+                    model: Rol,
+                    attributes: ['name'], // Solo necesitamos el nombre del rol
+                    through: { attributes: [] } // No necesitamos datos de la tabla intermedia
+                }
+            });
+
+            if (!user) {
+                return res.status(404).json({ message: 'User not found.' });
+            }
+
+            // 3. Extraer los nombres de los roles del usuario
+            const userRoles = user.roles.map(role => role.name);
+
+            // 4. Comprobar si el usuario tiene alguno de los roles permitidos
+            const hasRequiredRole = userRoles.some(role => allowedRoles.includes(role));
+
+            if (!hasRequiredRole) {
+                return res.status(403).json({ message: 'Forbidden: You do not have permission to perform this action.' });
+            }
+
+            // 5. Si todo está bien, continuar
+            next();
+        } catch (error) {
+            console.error('Error during role authorization:', error);
+            return res.status(500).json({ message: 'Server error during authorization.' });
+        }
     };
 };

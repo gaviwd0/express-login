@@ -1,8 +1,7 @@
 import { User } from '../models/users.models.js';
+import { Rol } from '../models/rules.models.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-dotenv.config();
 
 //register func
 export const register = async (req, res) => {
@@ -10,9 +9,20 @@ export const register = async (req, res) => {
     
     try {
         if(existEmail) return res.status(400).json({ message: 'Email already exists on system' }); 
-        const { name, email, password, role } = req.body;
-        const user = await User.create({ name, email, password, role });
+        const { name, email, password } = req.body;
+
+        const user = await User.create({ name, email, password });
+
+        // 2. Buscar o crear rol por defecto
+        const defaultRole = await Rol.findOne({ where: { name: 'unsigned' } });
+
+        // 3. Asignar el rol al usuario
+        if (defaultRole) {
+            await user.addRole(defaultRole);
+        }
+
         res.status(201).json({ message: 'User created successfully', userId: user.id });
+
     } catch (error) {
         res.status(400).json({ message: 'Error creating user', error: error.message });
     }
@@ -21,7 +31,9 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ where: { email } });
+        const user = await User.findOne({
+            where: { email }
+        });
 
         if (!user) {
             return res.status(401).json({ message: 'Invalid credentials' });
@@ -33,13 +45,12 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-
         // 1. Crear Access Token (corta duración)
         const accessToken = jwt.sign({ id: user.id}, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRATE_TIME_ACCESS || '15m'
         });
 
-        // 2. Crear Refresh Token (larga duración)
+        // 2. Crear Refresh Token (larga duración) - No necesita roles
         const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET_REFRESH, {
             expiresIn: process.env.JWT_EXPIRE_REFRESH_TIME || '7d'
         });
@@ -52,7 +63,7 @@ export const login = async (req, res) => {
         };
 
         // Duración de las cookies en milisegundos
-        const accessTokenMaxAge = 1000 * 60 * 60; // 60 minutos
+        const accessTokenMaxAge = 1000 * 60 * 40; // 40 minutos
         const refreshTokenMaxAge = 1000 * 60 * 60 * 24 * 7; // 7 días
 
         res.cookie('access_token', accessToken, { ...cookieOptions, maxAge: accessTokenMaxAge });
@@ -98,22 +109,20 @@ export const refreshToken = async (req, res) => {
         if (!user || user.status === 'cancelled') {
             return res.status(401).json({ message: 'User not found or inactive, authorization denied.' });
         }
-        console.log(user.id)
+
         // 4. Generar un nuevo access token (corta duración)
-        const newAccessToken = jwt.sign(
-            { id: user.id},
+        const newAccessToken = jwt.sign( { id: user.id},
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRATE_TIME_ACCESS || '15m' }
         );
 
         // 5. Enviar el nuevo access token en la cookie
-        res.cookie('access_token', newAccessToken, {
+        res.cookie('access_token', newAccessToken, { 
             httpOnly: true,
             secure: !(process.env.APP_MODE !== 'dev'),
             sameSite: 'strict',
-            maxAge: 1000 * 60 * 20 // 60 minutos
+            maxAge: 1000 * 60 * 40 // 40 minutos
         });
-
         res.status(200).json({ message: 'Token refreshed successfully' });
     } catch (error) {
         // Si el refresh token es inválido o ha expirado, limpiamos las cookies por seguridad

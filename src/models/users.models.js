@@ -1,9 +1,6 @@
 import { sequelize } from '../config/dbconfig/db.config.js'
 import { DataTypes } from 'sequelize'
 import bcrypt from 'bcrypt'
-import dotenv from 'dotenv'
-dotenv.config()
-
 
 export const User = sequelize.define('users', {
     id: {
@@ -28,11 +25,6 @@ export const User = sequelize.define('users', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    role: {
-        type: DataTypes.ENUM,
-        values: ['client', 'employee'],
-        allowNull: false
-    },
     status: {
         type: DataTypes.ENUM,
         values: ['available', 'cancelled'],
@@ -49,5 +41,3 @@ export const User = sequelize.define('users', {
         }
     }
 })
-
-
