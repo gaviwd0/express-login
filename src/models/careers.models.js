@@ -17,7 +17,8 @@ export const Career = sequelize.define('Careers',{
     },
     avaible: {
         type: DataTypes.BOOLEAN,
-        allowNull: false
+        allowNull: false,
+        defaultValue:true
     }
 
 })
