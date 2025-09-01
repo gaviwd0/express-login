@@ -7,8 +7,8 @@ const PORT = process.env.APP_PORT || 3001;
 
 async function main() {
     try {
-        await initDb()
         initModels()
+        await initDb()
         if (process.env.APP_MODE === 'dev') {
                 await insertDevs()
         } 
