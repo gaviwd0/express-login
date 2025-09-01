@@ -17,14 +17,15 @@ export const Location = sequelize.define('Locations',{
     },
     radius_meters:{
         type: DataTypes.INTEGER,
-        allowNull:false
+        allowNull:false,
+        defaultValue:150
     },
     latitud:{
-        type: DataTypes.DECIMAL(9,8),
+        type: DataTypes.FLOAT,
         allowNull:false
     },
     longitud:{
-        type: DataTypes.DECIMAL(9,8),
+        type: DataTypes.FLOAT,
         allowNull:false
     },
     avaible:{

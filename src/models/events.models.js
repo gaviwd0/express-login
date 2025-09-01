@@ -12,20 +12,20 @@ export const Event = sequelize.define('Events', {
     },
     description: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     init_date: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: true
     },
     create_date: {
         type: DataTypes.DATEONLY,
-        allowNull: true
+        allowNull: false
     },
     // cantidad de dias de extencion del evento
     days_extension: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
         defaultValue: 1
     },
     // los usuarios se pueden registrar si esta en true y no si esta en false

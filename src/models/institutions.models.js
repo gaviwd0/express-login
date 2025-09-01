@@ -13,7 +13,7 @@ export const Institution = sequelize.define('Institutions',{
     },
     description:{
         type: DataTypes.STRING,
-        allowNull:false
+        allowNull:true
     },
     
 })
