@@ -1,7 +1,7 @@
-import { sequelize } from '../config/dbconfig/db.config.js'
+import {sequelize} from '../config/dbconfig/db.config.js'
 import { DataTypes } from 'sequelize'
 
-export const Rol = sequelize.define('Roles',{
+export const Institution = sequelize.define('Institutions',{
     id:{
         type: DataTypes.INTEGER,
         primaryKey:true,
@@ -15,11 +15,5 @@ export const Rol = sequelize.define('Roles',{
         type: DataTypes.STRING,
         allowNull:false
     },
-    status:{
-        type: DataTypes.ENUM,
-        values: ['available', 'cancelled'],
-        allowNull: false,
-        defaultValue: 'available'
-    }
-
+    
 })
