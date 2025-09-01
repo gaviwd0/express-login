@@ -1,4 +1,4 @@
-
+import { CategoryEvent} from './categorys-events.model.js'
 import {User} from "./users.models.js";
 import {Rol} from "./rules.models.js";
 import {Assist} from "./assists.model.js";
@@ -12,6 +12,7 @@ import {OtherAttendance} from "./others-attendances.model.js";
 import {TypeAttendance} from "./types-attendances.model.js";
 
 export {
+  CategoryEvent,
   User,
   Rol,
   Assist,

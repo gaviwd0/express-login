@@ -1,6 +1,6 @@
 import { sequelize } from '../config/dbconfig/db.config.js';
 //importaciones de modelos
-import { User, Rol, Assist, Career, Event, TypeEvent, Location, Institution, Student, OtherAttendance, TypeAttendance } from '../models/index.js'
+import { User, Rol, Assist, Career, Event, TypeEvent, Location, Institution, Student, OtherAttendance, TypeAttendance, CategoryEvent } from '../models/index.js'
 
 // revisar relaciones
 export const initModels = () => {
@@ -50,6 +50,9 @@ export const initModels = () => {
 
     Event.belongsToMany(Career,{through:'Events_Careers'})
     Career.belongsToMany(Event,{through:'Events_Careers'})
+
+    Event.belongsToMany(CategoryEvent,{through:'Events_CategoryEvents'})
+    CategoryEvent.belongsToMany(Event,{through:'Events_CategoryEvents'})
 
 
 
@@ -108,7 +111,7 @@ export const insertDevs = async () => {
             const assistCount = await Assist.count()
         
             if(locationCount === 0 && institutionCount === 0 && studentCount === 0 && careerCount === 0 && eventCount === 0 && typeEventCount === 0 && typeAttendanceCount === 0 && otherAttendanceCount === 0 && assistCount === 0){
-                console.log('hola')
+              
             }
         }
     } catch (error) {
