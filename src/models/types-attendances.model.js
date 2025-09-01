@@ -10,5 +10,10 @@ export const TypeAttendance = sequelize.define('Types_Attendances', {
     name: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    avaible:{
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
     }
 })

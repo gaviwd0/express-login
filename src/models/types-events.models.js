@@ -10,5 +10,10 @@ export const TypeEvent = sequelize.define('Types_Events',{
     name:{
         type:DataTypes.STRING,
         allownull:false
+    },
+     avaible:{
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
     }
 })

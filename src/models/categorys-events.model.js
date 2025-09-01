@@ -14,5 +14,10 @@ export const CategoryEvent= sequelize.define('Categorys_Events',{
     description:{
         type:DataTypes.STRING,
         allowNull:true
+    },
+     avaible:{
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
     }
 })
