@@ -1,13 +1,13 @@
 import { sequelize } from '../config/dbconfig/db.config.js';
 //importaciones de modelos
-import {UserRoles, User, Rol, Assist, Career, Event, TypeEvent, Location, Institution, Student, OtherAttendance, TypeAttendance } from '../models/index.js'
+import { User, Rol, Assist, Career, Event, TypeEvent, Location, Institution, Student, OtherAttendance, TypeAttendance } from '../models/index.js'
 
 // revisar relaciones
 export const initModels = () => {
     // asociaciones de usuario
 
-    User.belongsToMany(Rol, { through: UserRoles });
-    Rol.belongsToMany(User, { through: UserRoles });
+    User.belongsToMany(Rol, { through: 'user_roles' });
+    Rol.belongsToMany(User, { through: 'user_roles' });
 
     // asociaciones del sistema
 
