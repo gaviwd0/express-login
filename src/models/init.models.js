@@ -155,12 +155,12 @@ export const insertDevs = async () => {
 
                 //student inserts
                 const devInsertStudent = await Student.bulkCreate([
-                    {identification:"46000000", name:"testStudent", lastname:"testStudentLastname",email:"teststudent@gmail.com",phone:"1233333"}
+                    {identification:"46000000", name:"testStudent", lastname:"testStudentLastname",email:"teststudent@gmail.com",phone:"1233333",career_id:1}
                 ])
 
                 //other attendance inserts
                 const devInsertOtherAttendance = await OtherAttendance.bulkCreate([
-                    {identification:"46000001", name:"nameOther",lastname:"lastnameOther",email:"othertest@gmail.com",phone:"1233333"}
+                    {identification:"46000001", name:"nameOther",lastname:"lastnameOther",email:"othertest@gmail.com",phone:"1233333",type_attendance_id:1}
                 ])
 
                 //assist inserts
@@ -176,7 +176,6 @@ export const insertDevs = async () => {
                  devInsertEvent.addCategorys_Event(1)
                 //Location
                 devInsertLocation.addInstitution(1)
-                //Student
             }  else return console.log('ya hay registros en la base de datos')
             
     } catch (error) {
