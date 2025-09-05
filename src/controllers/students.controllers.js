@@ -19,10 +19,13 @@ export const createStudent = async (req,res) =>{
     const existPhone = await Student.findOne({where:{phone:phone}})  
     if(existPhone) return res.status(400).json({message:"Phone already exists for Students"})
     }
-
+    //si carrera tiene algo
     // verificamos si existe la carrera
+    if(career){
     const existCareer= await Career.findOne({where:{id:career}})
     if(!existCareer) return res.status(404).json({message:"Career not exists"})
+    }
+    
     
     const newStudent = await Student.create({
         identification,
@@ -30,7 +33,7 @@ export const createStudent = async (req,res) =>{
         lastname,
         email,
         phone,
-        career
+        career_id:career || null
     })
 
     res.status(201).json({message:"Student created successfully",id:newStudent.id, name:newStudent.name})
@@ -38,13 +41,10 @@ export const createStudent = async (req,res) =>{
     }catch(error){
          return console.log(error),res.status(500).json({ message: 'Server error', error: error.message })
     }
-    
-
-    
 }
 
 export const getStudentById = async (req,res) =>{
-    t
+    
 }
 
 export const getStudentByCareer = async (req,res) =>{

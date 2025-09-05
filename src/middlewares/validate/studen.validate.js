@@ -1,4 +1,4 @@
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 
 export const defaultStudentValidator = [
      body("identification")
@@ -33,5 +33,9 @@ export const defaultStudentValidator = [
         .isEmail().withMessage("El email deve tener un formato válido"),
     body("phone")
         .matches(/^\+?[1-9]\d{7,14}$/)
-        .withMessage("Debe ser un número de teléfono válido en formato internacional (+XXXXXXXXXXX)")
+        .withMessage("Debe ser un número de teléfono válido en formato internacional (+XXXXXXXXXXX)"),
+      body("career")
+        .optional()
+        .isInt({min:1}).withMessage("career fuera de rango")
+
 ]
