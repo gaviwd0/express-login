@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import authRouter from './routes/auth.routes.js';
 import testRolesRouter from './routes/test.routes.js';
+import studentRouter from './routes/students.routes.js';
 import { swaggerDocs } from './swagger.js';
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(cookieParser())
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/test-roles', testRolesRouter);
+app.use('/api/v1/', studentRouter)
 
 
 //endpoint para testear
